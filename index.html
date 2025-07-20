@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jannah Collection</title>
+  <style>
+    body { font-family: 'Segoe UI', sans-serif; margin: 0; background: #fff6f8; color: #444; }
+    header { background: #ffd6e8; padding: 10px 20px; text-align: center; }
+    header img.logo { width: 180px; margin-bottom: 10px; }
+    header h1 { margin: 0; font-size: 2em; color: #b03060; }
+    header p { font-size: 1.1em; margin-top: 5px; }
+
+    .filter-buttons {
+      position: sticky;
+      top: 0;
+      background-color: #fff6f8;
+      z-index: 10;
+      padding: 10px 0;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    }
+    .filter-buttons button {
+      padding: 10px 18px;
+      margin: 6px 8px;
+      background: linear-gradient(45deg, #ff7eb9, #ff4081);
+      color: white;
+      font-weight: bold;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+      transition: transform 0.2s ease, background 0.3s;
+    }
+    .filter-buttons button:hover {
+      background: linear-gradient(45deg, #ff4081, #ff7eb9);
+      transform: scale(1.05);
+    }
+
+    .product-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 20px;
+      padding: 20px;
+    }
+    .produk {
+      width: 300px;
+    }
+    .card {
+      position: relative;
+      background: #fff;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .card:hover {
+      transform: scale(1.03);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+    .card img {
+      width: 100%;
+      height: 250px;
+      object-fit: cover;
+      border-radius: 10px;
+      aspect-ratio: 3/4;
+      transition: transform 0.3s ease;
+    }
+    .card:hover img {
+      transform: scale(1.05);
+    }
+
+    .product-info {
+      padding: 15px;
+    }
+    .product-title {
+      font-size: 1.2em;
+      color: #b03060;
+      margin-bottom: 5px;
+    }
+
+    .product-label {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      background-color: #ff4081;
+      color: white;
+      font-size: 0.75em;
+      font-weight: bold;
+      padding: 6px 12px;
+      border-radius: 20px;
+      z-index: 2;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .premium-section {
+      background: linear-gradient(to bottom, #fdf7fb, #ffffff);
+      padding: 16px 12px;
+      text-align: center;
+      border-radius: 16px;
+      max-width: 100%;
+      margin: 0 auto 20px;
+      box-shadow: 0 0 6px rgba(0, 0, 0, 0.03);
+    }
+    .premium-title {
+      font-size: 28px;
+      font-weight: 700;
+      color: #a0675f;
+      margin-bottom: 6px;
+    }
+    .premium-subtitle {
+      font-size: 17px;
+      color: #666;
+      margin-bottom: 12px;
+    }
+    .premium-tags {
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 6px;
+    }
+    .premium-tags span {
+      background-color: #fff6db;
+      color: #a88c5d;
+      padding: 6px 14px;
+      border-radius: 18px;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+    }
+    .premium-video {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+    }
+    .premium-video video {
+      width: 95%;
+      max-width: 760px;
+      aspect-ratio: 16 / 9;
+      border-radius: 16px;
+      box-shadow: 0 6px 14px rgba(255, 64, 129, 0.1);
+      border: 1px solid rgba(255, 192, 203, 0.2);
+    }
+
+    .total-pembelian {
+      font-size: 0.9em;
+      color: #888;
+      margin-top: 4px;
+    }
+    .price-pembelian {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+    .btn-wa {
+      display: block;
+      width: 100%;
+      padding: 10px 0;
+      margin-top: 10px;
+      background-color: #ff4081;
+      color: white;
+      font-weight: bold;
+      border-radius: 8px;
+      text-align: center;
+      text-decoration: none;
+      transition: background-color 0.3s ease;
+      box-sizing: border-box;
+    }
+    .btn-wa:hover {
+      background-color: #e73370;
+    }
+
+    footer {
+      background: #ffeaf2;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9em;
+    }
+
+    #pagination button {
+      margin: 4px;
+      padding: 8px 14px;
+      background-color: #ffe0ef;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      color: #b03060;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+    #pagination button.active {
+      background-color: #ff4081;
+      color: white;
+    }
+    #pagination button:hover {
+      background-color: #ff80a5;
+      color: white;
+    }  
+@media (max-width: 768px) {
+  header img.logo {
+    display: block !important;
+    width: 140px;
+    max-width: 90%;
+    height: auto;
+    margin: 0 auto 10px;
+  }
+}
+  </style>
+</head>
+<body>
+
+<header>
+  <img class="logo" src="https://i.ibb.co/1JZQFrdk/JANNAH1.png" alt="JANNAH1" />
+  <h1>Jannah Collection</h1>
+  <p>Hijab & Fashion Elegan dan Nyaman untuk Segala Usia Mulai Sejak Dini Sampai Dewasa</p>
+</header>
+
+<div class="filter-buttons">
+  <div class="kategori-buttons">
+    <button onclick="filterKategori('all'); filterProduk('all')">Semua</button>
+    <button onclick="filterKategori('mukena'); filterProduk('mukena')">Mukena</button>
+    <button onclick="filterKategori('hijabanak'); filterProduk('hijabanak')">Hijab Anak</button>
+    <button onclick="filterKategori('hijab-dewasa'); filterProduk('hijab-dewasa')">Hijab Dewasa</button>
+    <button onclick="filterKategori('gamis'); filterProduk('gamis')">Gamis</button>
+    <button onclick="filterKategori('tas'); filterProduk('tas')">Tas</button>
+  </div>
+</div>
+
+<section class="premium-section">
+  <h2 class="premium-title">🌸 Jannah Collection 🌸</h2>
+  <p class="premium-subtitle">Hijab Cantik dari Anak hingga Dewasa
+
+Temukan hijab dan busana muslimah yang anggun, adem, dan nyaman untuk semua usia! Mulai dari si kecil yang belajar berhijab hingga ibu muda yang ingin tampil syar’i dan stylish. Warna soft, bahan berkualitas, desain kekinian – cocok untuk sekolah, hangout, hingga acara spesial.
+
+✨ Tampil cantik, tetap syar’i – hanya di Jannah Collection!</p>
+  <div class="premium-tags">
+    <span>Model Premium</span>
+    <span>Bahan Berkualitas</span>
+    <span>Spesial Promo</span>
+  </div>
+  <div class="premium-video" id="videoSection">
+    <video autoplay muted loop playsinline>
+      <source src="https://cdn.pixabay.com/video/2020/12/13/59093-490977482_large.mp4" type="video/mp4">
+      Browser Anda tidak mendukung video ini.
+    </video>
+  </div>
+</section>
+  <section class="product-list">
+        <div class="produk mukena">
+      <article class="card">
+          <div class="product-label">HOT</div>
+        <img src="https://down-id.img.susercontent.com/file/id-11134207-7qul3-lhyw4oejki5j45.jpeg" alt="Mukena Gricela" loading="lazy">
+        <div class="product-info">
+          <h3 class="product-title">Mukena Gricela</h3>
+          <div class="price-pembelian">
+          <div class="product-price">Rp275.000</div>
+          <div class="total-pembelian">Terjual 183</div>
+        </div>
+          <a class="btn-wa" href="https://emma.orderonline.id/mukenagricela-bordirpremium">Pesan Sekarang</a>
+        </div>
+      </article>
+    </div>
+          <div class="produk mukena">
+      <article class="card">
+          <div class="product-label">HOT</div>
+        <img src="https://cdn.orderonline.id/uploads/images_4685181707754079688.gif" alt="POP ICE MOTIF TWILL DIAMOND 2IN1 TRAVELLING" loading="lazy">
+        <div class="product-info">
+          <h3 class="product-title">POP ICE MOTIF TWILL DIAMOND 2IN1 TRAVELLING</h3>
+          <div class="price-pembelian">
+          <div class="product-price">Rp242.000</div>
+          <div class="total-pembelian">Terjual 154</div>
+        </div>
+          <a class="btn-wa" href="https://emma.orderonline.id/popicemukena-dewasa">Pesan Sekarang</a>
+        </div>
+      </article>
+    </div>
+    <div class="produk hijabanak">
+      <article class="card">
+          <div class="product-label">Best Seller</div>
+        <img src="https://down-id.img.susercontent.com/file/id-11134207-7rask-m52b2hc4sft2a2.jpeg" alt="Turban Lolly Series" loading="lazy">
+        <div class="product-info">
+          <h3 class="product-title">Turban Lolly Series</h3>
+          <div class="price-pembelian">
+          <div class="product-price">Rp155.000</div>
+          <div class="total-pembelian">Terjual 419</div>
+        </div>
+          <a class="btn-wa" href="https://loly.ayopayu.web.id">Pesan Sekarang</a>
+        </div>
+      </article>
+    </div>
+  <div class="produk hijabanak">
+      <article class="card">
+          <div class="product-label">Best Seller</div>
+      <img src="https://down-id.img.susercontent.com/file/id-11134207-7rasc-m13mqgqw2ffoc8.jpeg" alt="Bergo Jersey Anak & Bayi" loading="lazy">
+      <div class="product-info">
+          <h3 class="product-title">Bergo Jersey Anak & Bayi</h3>
+          <div class="price-pembelian">
+          <div class="product-price">Rp185.000</div>
+          <div class="total-pembelian">Terjual 469</div>
+        </div>
+          <a class="btn-wa" href="https://bergobayi.ayopayu.web.id">Pesan Sekarang</a>
+        </div>
+      </article>
+    </div>
+  <div class="produk hijabanak">
+      <article class="card">
+          <div class="product-label">Best Seller</div>
+      <img src="https://down-id.img.susercontent.com/file/id-11134207-7rbk1-m8o6jf2m4jjh9a.jpeg" alt="Hijab Mahira School Series" loading="lazy">
+      <div class="product-info">
+        <h3 class="product-title">Hijab Mahira School Series</h3>
+          <div class="price-pembelian">
+        <div class="product-price">Rp155.000</div>
+          <div class="total-pembelian">Terjual 752</div>
+        </div>
+        <a class="btn-wa" href="https://scholl.ayopayu.web.id">Pesan Sekarang</a>
+        </div>
+      </article>
+    </div>
+  <div class="produk hijabanak">
+      <article class="card">
+          <div class="product-label">HOT</div>
+      <img src="https://down-id.img.susercontent.com/file/id-11134207-7ra0h-mbgiym8w6v9icf.jpeg" alt="Hijab Mahira Kids Unicorn" loading="lazy">
+      <div class="product-info">
+        <h3 class="product-title">Hijab Mahira Kids Unicorn</h3>
+          <div class="price-pembelian">
+        <div class="product-price">Rp155.000</div>
+          <div class="total-pembelian">Terjual 159</div>
+        </div>
+        <a class="btn-wa" href="https://schoolseries.ayopayu.web.id">Pesan Sekarang</a>
+        </div>
+      </article>
+    </div>
+  <div class="produk hijab-dewasa">
+      <article class="card">
+          <div class="product-label">Best Seller</div>
+      <img src="https://down-id.img.susercontent.com/file/id-11134207-7r991-lop2qfo9n85la9.jpeg" alt="Hijab Segiempat Instan Magnetic Pollycotton" loading="lazy">
+      <div class="product-info">
+        <h3 class="product-title">Hijab Segiempat Instan Magnetic Pollycotton</h3>
+          <div class="price-pembelian">
+        <div class="product-price">Rp145.000</div>
+          <div class="total-pembelian">Terjual 421</div>
+        </div>
+        <a class="btn-wa" href="https://emma.orderonline.id/ay-HsiMP">Pesan Sekarang</a>
+        </div>
+      </article>
+    </div>
+  <div class="produk hijab-dewasa">
+      <article class="card">
+          <div class="product-label">HOT</div>
+      <img src="https://cdn.orderonline.id/uploads/images_4428781701424117468.gif" alt="HIJAB INSTAN MELEYOT JERSEY" loading="lazy">
+      <div class="product-info">
+        <h3 class="product-title">HIJAB INSTAN MELEYOT JERSEY</h3>
+          <div class="price-pembelian">
+        <div class="product-price">Rp157.000</div>
+          <div class="total-pembelian">Terjual 221</div>
+        </div>
+        <a class="btn-wa" href="https://emma.orderonline.id/ayo-pashminainneroval">Pesan Sekarang</a>
+        </div>
+      </article>
+    </div>
+  <div class="produk hijab-dewasa">
+      <article class="card">
+          <div class="product-label">Best Seller</div>
+      <img src="https://cdn.orderonline.id/uploads/images_2306621701426192437.gif" alt="KUPLUK HIJAB RAJUT" loading="lazy">
+      <div class="product-info">
+        <h3 class="product-title">KUPLUK HIJAB RAJUT</h3>
+          <div class="price-pembelian">
+        <div class="product-price">Rp199.000</div>
+          <div class="total-pembelian">Terjual 418</div>
+        </div>
+        <a class="btn-wa" href="https://emma.orderonline.id/ayo-kuplukhijab-rajut">Pesan Sekarang</a>
+        </div>
+      </article>
+    </div>
+  <div class="produk hijab-dewasa">
+      <article class="card">
+          <div class="product-label">HOT</div>
+      <img src="https://cdn.orderonline.id/uploads/images_2539301708062631480.png" alt="FRENCH HIJAB KHIMAR" loading="lazy">
+      <div class="product-info">
+        <h3 class="product-title">FRENCH HIJAB KHIMAR</h3>
+          <div class="price-pembelian">
+        <div class="product-price">Rp195.000</div>
+          <div class="total-pembelian">Terjual 188</div>
+        </div>
+        <a class="btn-wa" href="https://emma.orderonline.id/FRENCHayoHIJABpayKHIMAR">Pesan Sekarang</a>
+        </div>
+      </article>
+    </div>
+  <div class="produk hijab-dewasa">
+      <article class="card">
+          <div class="product-label">NEW ARRIVAL</div>
+      <img src="https://down-id.img.susercontent.com/file/id-11134207-7r992-lzsrkkojybkw6c.jpeg" alt="Hamidah Hijab Sport" loading="lazy">
+      <div class="product-info">
+        <h3 class="product-title">Hamidah Hijab Sport</h3>
+          <div class="price-pembelian">
+        <div class="product-price">Rp128.000</div>
+          <div class="total-pembelian">Terjual 78</div>
+        </div>
+        <a class="btn-wa" href="https://emma.orderonline.id/FRENCHayoHIJABpayKHIMAR">Pesan Sekarang</a>
+        </div>
+      </article>
+    </div>
+  <div class="produk gamis">
+      <article class="card">
+          <div class="product-label">Best Seller</div>
+      <img src="https://down-id.img.susercontent.com/file/id-11134207-7rasb-m15ub4mcwtvm48.jpeg" alt="Gamis Silk Premium Elizha" loading="lazy">
+      <div class="product-info">
+        <h3 class="product-title">Gamis Silk Premium Elizha</h3>
+          <div class="price-pembelian">
+        <div class="product-price">Rp261.000</div>
+          <div class="total-pembelian">Terjual 921</div>
+        </div>
+        <a class="btn-wa" href="http://gamiselizha.ayopayu.web.id">Pesan Sekarang</a>
+        </div>
+      </article>
+    </div>
+    <div class="produk tas">
+  <article class="card">
+    <div class="product-label">Best Seller</div>
+    <img src="https://cdn.techcloudly.com/image/c8a0a8f03893b77f54e686d044c097d0ebd656b3.jpeg" alt="Crossbody Leather Bag" loading="lazy">
+    <div class="product-info">
+      <h3 class="product-title">Crossbody Leather Bag</h3>
+      <div class="price-pembelian">
+        <div class="product-price">Rp180.900</div>
+        <div class="total-pembelian">Terjual 348</div>
+      </div>
+      <a class="btn-wa" href="https://crossbody.ayopayu.web.id">Pesan Sekarang</a>
+    </div>
+  </article>
+</div>
+  <div class="produk tas">
+      <article class="card">
+      <div class="product-label">HOT</div>
+      <img src="https://s.alicdn.com/@sc04/kf/H1f93efe2234742169373e0c3fd14de52s.jpg_720x720q50.jpg" alt="Backpack For Women And Girls 2027-1" loading="lazy">
+      <div class="product-info">
+        <h3 class="product-title">Backpack For Women And Girls 2027-1</h3>
+          <div class="price-pembelian">
+        <div class="product-price">Rp166.000</div>
+          <div class="total-pembelian">Terjual 814</div>
+        </div>
+        <a class="btn-wa" href="https://backpack.ayopayu.web.id">Pesan Sekarang</a>
+        </div>
+      </article>
+    </div>
+  </section>
+<div id="pagination" style="text-align:center; margin-bottom: 20px;"></div>
+<div id="popupModal" style="display:none; position:fixed; top:0; left:0; right:0; bottom:0; background-color:rgba(0,0,0,0.6); z-index:9999; justify-content:center; align-items:center;">
+</div>
+
+<footer>
+  &copy; 2025 Jannah Collection. All rights reserved.
+</footer>
+<script>
+function filterProduk(kategori) {
+  var semuaProduk = document.getElementsByClassName("produk");
+
+  for (var i = 0; i < semuaProduk.length; i++) {
+    semuaProduk[i].style.display = 
+      (kategori === "all" || semuaProduk[i].classList.contains(kategori)) 
+      ? "block" : "none";
+  }
+
+  halamanSekarang = 1;
+  if (kategori === "all") {
+    tampilkanSemuaProdukTanpaPagination();
+    buatTombolPagination(0, 1); // Sembunyikan pagination
+  } else {
+    tampilkanHalamanProduk(halamanSekarang);
+  }
+}
+
+function tampilkanSemuaProdukTanpaPagination() {
+  const semuaProduk = document.querySelectorAll('.produk');
+  semuaProduk.forEach(produk => {
+    produk.style.display = 'block';
+  });
+}
+
+function filterKategori(kategori) {
+  const videoSection = document.getElementById('videoSection');
+  if (kategori === 'hijabanak' || kategori === 'hijab-dewasa' || kategori === 'gamis' || kategori === 'tas') {
+    videoSection.style.display = 'none';
+  } else {
+    videoSection.style.display = 'block';
+  }
+}
+
+const produkPerHalaman = 6;
+let halamanSekarang = 1;
+
+function tampilkanHalamanProduk(halaman) {
+  const semuaProduk = document.querySelectorAll('.produk');
+  const produkYangTampil = Array.from(semuaProduk).filter(p => p.style.display !== 'none');
+
+  produkYangTampil.forEach((produk, index) => {
+    produk.style.display = (index >= (halaman - 1) * produkPerHalaman && index < halaman * produkPerHalaman)
+      ? 'block'
+      : 'none';
+  });
+
+  buatTombolPagination(Math.ceil(produkYangTampil.length / produkPerHalaman), halaman);
+}
+
+function buatTombolPagination(jumlahHalaman, aktif) {
+  const pagination = document.getElementById('pagination');
+  pagination.innerHTML = '';
+pagination.style.display = jumlahHalaman <= 1 ? 'none' : 'block';
+
+  if (jumlahHalaman <= 1) return;
+
+  for (let i = 1; i <= jumlahHalaman; i++) {
+    const btn = document.createElement('button');
+    btn.textContent = i;
+    btn.className = (i === aktif) ? 'active' : '';
+    btn.onclick = () => {
+      halamanSekarang = i;
+      tampilkanHalamanProduk(i);
+    };
+    pagination.appendChild(btn);
+  }
+}
+
+window.onload = () => {
+  filterProduk('all'); // Tampilkan semua saat halaman dimuat
+};
+</script>
+<button onclick="window.scrollTo({top: 0, behavior: 'smooth'});" 
+        style="position: fixed; bottom: 20px; right: 20px; background-color: #ff4081; color: white; border: none; padding: 10px 14px; border-radius: 50%; box-shadow: 0 2px 6px rgba(0,0,0,0.2); cursor: pointer;">
+  ↑
+</button>
+</body>
+</html>
